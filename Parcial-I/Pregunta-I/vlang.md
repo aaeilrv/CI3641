@@ -17,5 +17,5 @@ v run rotar.v <w> <k>
 
 **Pregunta I.c:**
 ```
-v run matriz.v <A>
+v run matriz.v
 ```
