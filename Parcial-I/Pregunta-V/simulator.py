@@ -27,6 +27,7 @@ class Simulator:
         self.programs = {}
         self.interpreters = []
         self.translators = []
+        
         self.languages.append(Language("LOCAL"))
 
     def define_language(self, name):
@@ -63,8 +64,7 @@ class Simulator:
             else:
                 return False
 
-    # Funciones auxiliares para imprimir los programas, lenguajes y traductores
-
+    # Funciones auxiliares de impresión
     def print_programs(self):
         for program_name, program in self.programs.items():
             languages = ', '.join(program.language)
@@ -83,13 +83,21 @@ def main():
 
     while True:
         action = input("Ingresa una acción (DEFINIR, EJECUTABLE, SALIR): ").split()
-        if len(action) >= 4 and action[0] == "DEFINIR":
+        if action[0] == "DEFINIR":
             if action[1] == "PROGRAMA":
+                if len(action) < 4:
+                    print("Error: faltó información.")
+                    continue
+
                 name = action[2]
                 language = action[3]
                 simulator.define_program(name, language)
 
             elif action[1] == "INTERPRETE":
+                if len(action) < 4:
+                    print("Error: faltó información.")
+                    continue
+
                 written_in = action[2]
                 for_language = action[3]
 
@@ -132,6 +140,10 @@ def main():
                             simulator.translators.append(Translator(for_language, existing_translator.source_language, existing_translator.target_language))
 
             elif action[1] == "TRADUCTOR":
+                if len(action) < 5:
+                    print("Error: faltó información.")
+                    continue
+
                 written_in = action[2]
                 source_language = action[3]
                 target_language = action[4]
@@ -161,6 +173,10 @@ def main():
                 print("Error: comando inválido.")
         
         elif action[0] == "EJECUTABLE":
+            if len(action) != 2:
+                print("Error: faltó información.")
+                continue
+
             program_name = action[1]
             if simulator.is_executable(program_name):
                 print(f"Si, es posible ejecutar el programa '{program_name}'.")
