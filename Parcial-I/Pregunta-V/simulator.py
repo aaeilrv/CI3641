@@ -35,10 +35,8 @@ class Simulator:
     def define_program(self, name, language):
         if name not in self.programs:
             self.programs[name] = Program(name)
-
-            if language not in self.programs[name].language:
-                self.programs[name].add_language(language)
-                print(f"Se definió el programa '{name}', ejecutable en '{language}'.")
+            self.programs[name].add_language(language)
+            print(f"Se definió el programa '{name}', ejecutable en '{language}'.")  
         else:
             if language not in self.programs[name].language:
                 self.programs[name].add_language(language)
@@ -91,65 +89,47 @@ def main():
                 language = action[3]
                 simulator.define_program(name, language)
 
-                # Si existe un intérprete hacia A escrito en language, se agrega A como lenguaje del programa
-                for existing_interpreter in simulator.interpreters:
-                    if existing_interpreter.for_language == language:
-                        simulator.programs[name].add_language(existing_interpreter.written_in)
-
-                # Si existe un traductor desde language hacia A, se agrega A como lenguaje del programa
-                for existing_translator in simulator.translators:
-                    if existing_translator.source_language == language and existing_translator.written_in in [i.name for i in simulator.languages]:
-                        simulator.programs[name].add_language(existing_translator.target_language)
-
-                simulator.print_programs()
-
             elif action[1] == "INTERPRETE":
                 written_in = action[2]
                 for_language = action[3]
 
                 # Se agrega un intérprete al simulador
                 simulator.define_interpreter(written_in, for_language)
-
-                # 1. si la máquina entiende el lenguaje written_in, ahora también entiende for_language
+                
+                # Si la máquina entiende el lenguaje written_in:
                 if written_in in [i.name for i in simulator.languages] and for_language not in [i.name for i in simulator.languages]:
+                    # 1. Ahora también entiende for_language
                     simulator.languages.append(Language(for_language))
 
-                    # así también, ahora la máquina entiende todos los lenguajes
+                    # 2. La máquina entiende todos los lenguajes
                     # que tienen interprete escrito en for_language
                     interpreters_to_process = [for_language]
-
                     while interpreters_to_process:
                         current_interpreter = interpreters_to_process.pop(0)
 
                         for interpreter in simulator.interpreters:
                             if interpreter.written_in == current_interpreter:
-                                simulator.languages.append(Language(interpreter.for_language))
+                                if interpreter.for_language not in [i.name for i in simulator.languages]:
+                                    simulator.languages.append(Language(interpreter.for_language))
                                 interpreters_to_process.append(interpreter.for_language)
 
-                #2. Los programas escritos en written_in, ahora son ejecutables en for_language  
-                for program in simulator.programs.values():
-                    if written_in in program.language:
-                        program.add_language(for_language)
+                    # 3. Si tengo un traductor de A a B escrito en C, la máquina entiende B y for_language = C,
+                    # entonces tengo un traductor de A a B escrito en for_language
+                    for existing_translator in simulator.translators:
+                        if existing_translator.written_in == for_language and existing_translator.target_language in [i.name for i in simulator.languages]:
+                            if existing_translator.written_in != existing_translator.target_language:
+                                simulator.translators.append(Translator(written_in, existing_translator.source_language, existing_translator.target_language))
 
-                        # el programa también se puede correr en todos los lenguajes que
-                        # tienen interpretador de for_language a otro lenguage
-                        languages_to_add = [for_language]
-                        while languages_to_add:
-                            current_language = languages_to_add.pop(0)
+                        # 4. Si tengo un traductor de A a B escrito en C, la máquina entiende C
+                        # y for_language = B, entonces la máquina entiende A
+                        if existing_translator.written_in in [i.name for i in simulator.languages] and existing_translator.target_language == for_language:
+                            if existing_translator.source_language not in [i.name for i in simulator.languages]:
+                                simulator.languages.append(Language(existing_translator.source_language))
 
-                            for interpreter in simulator.interpreters:
-                                if interpreter.written_in == current_language:
-                                    program.add_language(interpreter.for_language)
-                                    languages_to_add.append(interpreter.for_language)
-
-                # 3. Si tengo un traductor escrito en written_in, ahora tengo uno escrito en for_language
-                for existing_translator in simulator.translators:
-                    if existing_translator.written_in == written_in:
-                        simulator.translators.append(Translator(for_language, existing_translator.source_language, existing_translator.target_language))
-
-                #simulator.print_programs()
-                #simulator.print_languages()
-                #simulator.print_translators()
+                        # 5. Si tengo un traductor de A a B escrito en C, con C = written_in,
+                        # ahora tengo un traductor de A a B escrito en D, con D = for_language.
+                        if existing_translator.written_in == written_in:
+                            simulator.translators.append(Translator(for_language, existing_translator.source_language, existing_translator.target_language))
 
             elif action[1] == "TRADUCTOR":
                 written_in = action[2]
@@ -159,37 +139,24 @@ def main():
                 # Se agrega un traductor
                 simulator.define_translator(written_in, source_language, target_language)
 
-                '''
-                Para los programas en la máquina:
-                si written_in lo entiende la máquina,
-                y si un programa está escrito en source_language, entonces se puede
-                traducir ese programa a target_language
-                '''
-                if written_in in [i.name for i in simulator.languages]:
-                    for program in simulator.programs.values():
-                        if source_language in program.language:
-                            program.add_language(target_language)
+                # Si la máquina entiende written_in y target_language:
+                if written_in in [i.name for i in simulator.languages] and target_language in [i.name for i in simulator.languages]:
+                    # 1. Ahora entiende source_language
+                    if source_language not in [i.name for i in simulator.languages]:
+                        simulator.languages.append(Language(source_language))
 
-                                # TO DO: si se agrega un traductor de B a C, y posteriormente uno de A a B,
-                                # Los programas escritor en A ahora son ejecutables en C.
+                        # 2. Si tengo un traductor de X a source_language escrito en Y y la máquina entiende Y,
+                        # entonces la máquina entiende X
+                        for existing_translator in simulator.translators:
+                            if existing_translator.written_in in [i.name for i in simulator.languages] and existing_translator.target_language == source_language:
+                                if existing_translator.source_language not in [i.name for i in simulator.languages]:
+                                    simulator.languages.append(Language(existing_translator.source_language))
 
-                '''
-                Si tengo un traductor de A a B escrito en C
-                y un traductor de de C a D escrito en E,
-                ahora tengo u traductor de A a B escrito en D
-                SOLO si la máquina entiende E
-                '''
-                for existing_translator in simulator.translators:
-                    if existing_translator.written_in in [i.name for i in simulator.languages]:
-                        if existing_translator.source_language == written_in:
-                            simulator.translators.append(Translator(existing_translator.target_language, source_language, target_language))
-                    #if existing_translator.written_in in [i.name for i in simulator.languages]:
-                    #    simulator.translators.append(Translator(existing_translator.source_language, source_language, target_language))               
-                
-                #simulator.print_programs()
-                #simulator.print_languages()
-                simulator.print_translators()            
-                
+                        # 3. Si yo tengo un traductor de X a Y escrito en source_language y la máquina entiende Y,
+                        # entonces la máquina entiende X
+                        for existing_translator in simulator.translators:
+                            if existing_translator.written_in == source_language and target_language in [i.name for i in simulator.languages]:
+                                simulator.languages.append(Language(existing_translator.source_language))                         
             else:
                 print("Error: comando inválido.")
         
