@@ -9,29 +9,29 @@ Respuestas:
 - 7 1258 13
 - 7 1258 
 
-**Alcance Dinámico y Asociación Profunda:**
-
-[Ver en Youtube]()
-
-Respuestas:
--
--
--
-
 **Alcance Estático y Asociación Superficial:**
 
-[Ver en Youtube]()
+[Ver en Youtube](https://www.youtube.com/watch?v=uTda7_ei584)
 
 Respuestas:
--
--
--
+- 21 1258 27
+- 7 1258 13
+- 7 1258 
+
+**Alcance Dinámico y Asociación Profunda:**
+
+[Ver en Youtube](https://www.youtube.com/watch?v=jRoMdVkbLRQ)
+
+Respuestas:
+- 21 1015 973
+- 7 1015 1932
+- 7 1015 7
 
 **Alcance Dinámico y Asociación Superficial:**
 
-[Ver en Youtube]()
+[Ver en Youtube](https://youtu.be/9P_xkSfPuGI)
 
 Respuestas:
--
--
--
+- 21 55 1513
+- 7 55 13
+- 7 55 7

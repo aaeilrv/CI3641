@@ -77,7 +77,11 @@ class Simulator:
     def print_translators(self):
         for translator in self.translators:
             print(f"Traductor de '{translator.source_language}' a '{translator.target_language}' escrito en '{translator.written_in}' ")
-        
+
+    def print_interpreters(self):
+        for interpreter in self.interpreters:
+            print(f"Intérprete de '{interpreter.for_language}' escrito en '{interpreter.written_in}' ")
+
 def main():
     simulator = Simulator()
 

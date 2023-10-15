@@ -22,11 +22,6 @@ namespace vector3D
         return {a.x + scalar, a.y + scalar, a.z + scalar};
     }
 
-    // escalar y vector
-    Vector operator+(double scalar, const Vector& a) {
-        return {a.x + scalar, a.y + scalar, a.z + scalar};
-    }
-
     //// RESTA ////
 
     // dos vectores
@@ -39,12 +34,6 @@ namespace vector3D
     Vector operator-(const Vector& a, double scalar)
     {
         return Vector{a.x - scalar, a.y - scalar, a.z - scalar};
-    }
-
-    // escalar y vector
-    Vector operator-(double scalar, const Vector& a)
-    {
-        return Vector{scalar - a.x, scalar - a.y, scalar - a.z};
     }
 
     //// PRODUCTO CRUZ ////
@@ -69,34 +58,12 @@ namespace vector3D
         return Vector{x, y, z};
     }
 
-    // Escalar y vector
-    Vector operator*(double scalar, const Vector& a)
-    {
-        double x = scalar * a.z - scalar * a.y;
-        double y = scalar * a.x - scalar * a.z;
-        double z = scalar * a.y - scalar * a.x;
-
-        return Vector{x, y, z};
-    }
-
     //// PRODUCTO PUNTO ////
 
     // Dos vectores
     double operator%(const Vector& a, const Vector& b)
     {
         return a.x * b.x + a.y * b.y + a.z * b.z;
-    }
-
-    // Vector y escalar
-    double operator%(const Vector& a, double scalar)
-    {
-        return a.x * scalar + a.y * scalar + a.z * scalar;
-    }
-
-    // Escalar y vector
-    double operator%(double scalar, const Vector& a)
-    {
-        return scalar * a.x + scalar * a.y + scalar * a.z;
     }
 
     //// NORMA ////
