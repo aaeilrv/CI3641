@@ -56,6 +56,7 @@ class Simulator:
     def is_executable(self, program_name):
         if program_name not in self.programs:
             print(f"Error: El programa '{program_name}' no se encuentra definido.")
+            return False
 
         program = self.programs[program_name]
         for language in program.language:
@@ -157,8 +158,8 @@ def main():
 
                 # Si la máquina entiende written_in y target_language:
                 if written_in in [i.name for i in simulator.languages] and target_language in [i.name for i in simulator.languages]:
-                    # 1. Ahora entiende source_language
                     if source_language not in [i.name for i in simulator.languages]:
+                        # 1. Ahora entiende source_language
                         simulator.languages.append(Language(source_language))
 
                         # 2. Si tengo un traductor de X a source_language escrito en Y y la máquina entiende Y,
@@ -180,12 +181,12 @@ def main():
             if len(action) != 2:
                 print("Error: faltó información.")
                 continue
-
             program_name = action[1]
             if simulator.is_executable(program_name):
                 print(f"Si, es posible ejecutar el programa '{program_name}'.")
             else:
                 print(f"No es posible ejecutar el programa '{program_name}'.")
+
         elif action[0] == "SALIR":
             break
         else:
