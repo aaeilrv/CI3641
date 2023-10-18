@@ -28,7 +28,7 @@ class Simulator:
         self.interpreters = []
         self.translators = []
         
-        self.languages.append(Language("LOCAL"))
+        self.languages.append(Language("local"))
 
     def define_language(self, name):
         self.languages.append(Language(name))
@@ -88,23 +88,23 @@ def main():
 
     while True:
         action = input("Ingresa una acción (DEFINIR, EJECUTABLE, SALIR): ").split()
-        if action[0] == "DEFINIR":
-            if action[1] == "PROGRAMA":
+        if action[0].lower() == "definir":
+            if action[1].lower() == "programa":
                 if len(action) < 4:
                     print("Error: faltó información.")
                     continue
 
-                name = action[2]
-                language = action[3]
+                name = action[2].lower()
+                language = action[3].lower()
                 simulator.define_program(name, language)
 
-            elif action[1] == "INTERPRETE":
+            elif action[1].lower() == "interprete":
                 if len(action) < 4:
                     print("Error: faltó información.")
                     continue
 
-                written_in = action[2]
-                for_language = action[3]
+                written_in = action[2].lower()
+                for_language = action[3].lower()
 
                 # Se agrega un intérprete al simulador
                 simulator.define_interpreter(written_in, for_language)
@@ -144,14 +144,14 @@ def main():
                         if existing_translator.written_in == written_in:
                             simulator.translators.append(Translator(for_language, existing_translator.source_language, existing_translator.target_language))
 
-            elif action[1] == "TRADUCTOR":
+            elif action[1].lower() == "traductor":
                 if len(action) < 5:
                     print("Error: faltó información.")
                     continue
 
-                written_in = action[2]
-                source_language = action[3]
-                target_language = action[4]
+                written_in = action[2].lower()
+                source_language = action[3].lower()
+                target_language = action[4].lower()
 
                 # Se agrega un traductor
                 simulator.define_translator(written_in, source_language, target_language)
@@ -177,7 +177,7 @@ def main():
             else:
                 print("Error: comando inválido.")
         
-        elif action[0] == "EJECUTABLE":
+        elif action[0].lower() == "ejecutable":
             if len(action) != 2:
                 print("Error: faltó información.")
                 continue
@@ -187,7 +187,7 @@ def main():
             else:
                 print(f"No es posible ejecutar el programa '{program_name}'.")
 
-        elif action[0] == "SALIR":
+        elif action[0].lower() == "salir":
             break
         else:
             print("Error: Acción Inválida.")
