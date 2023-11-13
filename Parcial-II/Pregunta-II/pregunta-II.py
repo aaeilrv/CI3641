@@ -32,7 +32,7 @@ def ver_proximo_operador(pos, expresion):
     return ""
 
 def comparar_precedencia(actual, proximo):
-    if precedencia[actual] < precedencia[proximo]:
+    if precedencia[actual] <= precedencia[proximo] and precedencia[actual] != 0:
         return True
     else:
         return False
@@ -54,7 +54,6 @@ def evaluar_prefijo(expresion):
         if es_operador(i):
             operando1 = stack.pop()
             operando2 = stack.pop()
-            print(operando1, i, operando2)
             resultado = eval(f"{operando1} {i} {operando2}")
             stack.append(resultado)
         else:
@@ -67,7 +66,6 @@ def evaluar_postfijo(expresion):
         if es_operador(i):
             operando2 = stack.pop()
             operando1 = stack.pop()
-            print(operando1, i, operando2)
             resultado = eval(f"{operando1} {i} {operando2}")
             stack.append(resultado)
         else:
@@ -94,6 +92,7 @@ def mostrar_prefijo(expresion):
             resultado = f"{operando1}{i}{operando2}"
 
             prox_ope = ver_proximo_operador(pos, expresion)
+            print(prox_ope)
 
             # Agrega paréntesis si es necesario:
             if comparar_precedencia(i, prox_ope):
@@ -105,6 +104,7 @@ def mostrar_prefijo(expresion):
 
     return resultado
 
+# ARREGLAR
 def mostrar_postfijo(expresion):
     stack = []
 
@@ -123,6 +123,8 @@ def mostrar_postfijo(expresion):
             stack.append(resultado)
         else:
             stack.append(str(i))
+
+    return resultado
 
 
 while True:
