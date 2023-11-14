@@ -4,7 +4,7 @@
 Escoja algún lenguaje de programación de alto nivel y de propósito general cuyo nombre empiece con la misma letra que su apellido. Dé una breve descripción del lenguaje escogido:
 
 1. De una breve descripción del lenguaje escogido.
-    1. Enumere y explique las estructuras de control de flujo que ofrece.
+    1. Enumere y explique las estructuras de control de flujo que ofrece. (TO DO)
         - Secuenciación:
         - Selección:
         - Iteración:
@@ -100,7 +100,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         La mayoría de las expresiones unarias son de tipo prefijo como `!` por el negado de una expresión booleana y `&` para obtener un valor por referencia.
         Al querer hacer un incremento o decremento del valor de una expresión numérica, será de tipo postfijo. Por ejemplo, V soporta `a++` mas no `++a`.
 
-        **Funciones**
+        ### Funciones
         En el caso de las funciones, el tipo viene después del nombre del argumento.
         Las funciones en V pueden ser utilizadas antes de su declaración, por lo que no se necesitan archivos de header
 
@@ -117,28 +117,32 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         Los valores como `18` o `3.15` son por default `int` y `f64` respectivamente.
 
-        **Otros tipos de datos:**
-        - Runes: representan un único caracter unicode. Para asignarlo se utilizan backticks `\`\`. Los mismos se pueden convertir en un string `UTF-8` haciendo uso del método `.str()` 
-
         **Arreglos:**
         Pueden ser de los siguientes tipos:
-        Number	[]int,[]i64
-        String	[]string
-        Rune	[]rune
-        Boolean	[]bool
-        Array	[][]int
-        Struct	[]MyStructName
-        Channel	[]chan f64
-        Function	[]MyFunctionType []fn (int) bool
-        Interface	[]MyInterfaceName
-        Sum Type	[]MySumTypeName
-        Generic Type	[]T
-        Map	[]map[string]f64
-        Enum	[]MyEnumType
-        Alias	[]MyAliasTypeName
-        Thread	[]thread int
-        Reference	[]&f64
-        Shared	[]shared MyStructType 
+        
+        | Tipo | Ejemplo de definición |
+        | ---------------|----------------------- |
+        | Number | []int,[]i64 |
+        | String | []string |
+        | Rune | []rune |
+        | Boolean | []bool |
+        | Array | [][]int |
+        | Struct | []MyStructName |
+        | Channel | []chan f64 |
+        | Function | []MyFunctionType []fn (int) bool |
+        | Interface | []MyInterfaceName |
+        | Sum Type | []MySumTypeName |
+        | Generic Type | []T |
+        | Map | []map[string]f64 |
+        | Enum | []MyEnumType |
+        | Alias | []MyAliasTypeName |
+        | Thread | []thread int |
+        | Reference | []&f64 |
+        | Shared | []shared MyStructType |
+
+        **Otros tipos de datos:**
+        - Runes: representan un único caracter unicode. Para asignarlo se utilizan backticks `\`\`. Los mismos se pueden convertir en un string `UTF-8` haciendo uso del método `.str()` 
+        - Maps: implementan una tabla de hash. Puede tener keys del tipo string, rune, integer, float o voidptr
 
         **Crear nuevo tipo de datos:**
         Para crear nuevos tipos de datos, se hace uso de `structs` de manera parecida a como se haría en lenguajes como C:
@@ -156,7 +160,38 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         println(alumno.nombre)
         ```
 
-        **Conversión a otros tipo de datos:**
-        Para la conversión a otros tipos, se utiliza la función de conversión de tipos: `T(v)`, con la que la variable `v` pasa a ser del tipo `T`.
 
     4. Describa el funcionamiento del sistema de tipos del lenguaje, incluyendo el tipo de equivalencia para sus tipos, reglas de compatibilidad y capacidades de inferencia de tipos.
+
+    El tipo de las variables es inferido del valor en el lado derecho. En caso de querer utilizar otro tipo, se utiliza la función de conversión de tipos: `T(v)`, con la que la variable `v` pasa a ser del tipo `T`:
+    ```
+    a := 23 //Int
+    b := i16(23) //i16
+    ```
+
+    En V, todos los operadores deben ser del mismo tipo en ambos lados, es decir, algo como esto no está permitido:
+    ```
+    mut a := 'hola'
+    println(a + 3)
+    ```
+    Sin embargo, existe una excepción en el caso de los integers y unsigned, donde un tipo primitivo pequeño puede ser promovido si cabe por completo en el data range del otro tipo. Para saber todas las posibilidades, nos guiamos de esta tabla:
+    ```
+        i8 → i16 → int → i64
+                    ↘     ↘
+                    f32 → f64
+                    ↗     ↗
+        u8 → u16 → u32 → u64 ⬎
+            ↘     ↘     ↘      ptr
+        i8 → i16 → int → i64 ⬏
+    ```
+    Para entender la idea mejor, se da un ejemplo de la promoción de tipos:
+    ```
+    a := 47 // int por default
+    b := u16(56) // u16
+    c := a + b // c es de tipo int, se hizo una promoción de b.
+    ```
+    ```
+    x := 3.14 // f64 por default
+    y := f32(1.6)
+    z := x - y //z es de tipo f64, se hizo una promoción de y.
+    ```
