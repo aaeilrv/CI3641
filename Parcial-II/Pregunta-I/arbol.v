@@ -22,38 +22,40 @@ fn (mut a Nodo) numero_de_hojas() int {
 	return pre_order_nums.len
 }
 
-fn (mut n Nodo) insertar(val f64) {
+fn (mut n Nodo) insertar_random(val f64) {
 	// Se utiliza un número aleatorio para
 	// decidir si se inserta a la izquierda o a la derecha
 	if rand.int() % 2 == 0 {
 		if n.existe_izq() {
-			n.izq.insertar(val)
+			n.izq.insertar_random(val)
 		} else {
 			n.izq = &Nodo{val, 0, 0, n.nivel + 1}
 		}
 	} else {
 		if n.existe_der() {
-			n.der.insertar(val)
+			n.der.insertar_random(val)
 		} else {
 			n.der = &Nodo{val, 0, 0, n.nivel + 1}
 		}
 	}
+}
 
-	// En caso de que se quiera
-	// crear un binary search tree
-	/*if val < n.valor {
+fn (mut n Nodo) insertar_binary_tree_search(val f64) {
+	// Se inserta a la izquierda si es menor
+	// y a la derecha si es mayor o igual
+	if val < n.valor {
 		if n.existe_izq() {
-			n.izq.insertar(val)
+			n.izq.insertar_binary_tree_search(val)
 		} else {
-			n.izq = &Nodo{val, 0, 0, false}
+			n.izq = &Nodo{val, 0, 0, n.nivel + 1}
 		}
 	} else {
 		if n.existe_der() {
-			n.der.insertar(val)
+			n.der.insertar_binary_tree_search(val)
 		} else {
-			n.der = &Nodo{val, 0, 0, false}
+			n.der = &Nodo{val, 0, 0, n.nivel + 1}
 		}
-	}*/
+	}
 }
 
 fn imprimir_por_niveles(mut n Nodo) {
@@ -134,15 +136,9 @@ fn (mut a Nodo) es_max_heap_simetrico() bool {
 fn main() {
 	// Primer Arbol
 	mut arbol_no_max_heap := Nodo{100, 0, 0, 0}
-	arbol_no_max_heap.insertar(90)
-	arbol_no_max_heap.insertar(80)
-	arbol_no_max_heap.insertar(70)
-	arbol_no_max_heap.insertar(60)
-	arbol_no_max_heap.insertar(50)
-	arbol_no_max_heap.insertar(40)
-	arbol_no_max_heap.insertar(30)
-	arbol_no_max_heap.insertar(20)
-	arbol_no_max_heap.insertar(10)
+	for i := 0; i < 10; i++ {
+		arbol_no_max_heap.insertar_random(rand.int() % 100)
+	}
 
 	imprimir_por_niveles(mut arbol_no_max_heap)
 
@@ -159,14 +155,33 @@ fn main() {
 	// Segundo Arbol
 	mut arbol_max_heap := Nodo{100, 0, 0, 0}
 	for i := 0; i < 10; i++ {
-		arbol_max_heap.insertar(100)
+		arbol_max_heap.insertar_random(100)
 	}
+
 	imprimir_por_niveles(mut arbol_max_heap)
 
 	print(": ")
 
 	if arbol_max_heap.es_max_heap() {
 		arbol_max_heap.es_max_heap_simetrico()
+	} else {
+		println("No es un max heap.")
+	}
+
+	println("\n")
+
+	// Tercer Arbol
+	mut arbol_binary_tree_search := Nodo{100, 0, 0, 0}
+	for i := 0; i < 10; i++ {
+		arbol_binary_tree_search.insertar_binary_tree_search(rand.int() % 100)
+	}
+
+	imprimir_por_niveles(mut arbol_binary_tree_search)
+
+	print(": ")
+
+	if arbol_binary_tree_search.es_max_heap() {
+		arbol_binary_tree_search.es_max_heap_simetrico()
 	} else {
 		println("No es un max heap.")
 	}
