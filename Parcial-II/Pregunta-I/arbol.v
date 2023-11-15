@@ -135,9 +135,14 @@ fn (mut a Nodo) es_max_heap_simetrico() bool {
 
 fn main() {
 	// Primer Arbol
+	/*
+	Utiliza valores aleatorios que a la vez ingresan a una hoja
+	aleatoria al árbol, por lo que puede o no ser un max heap (y
+	ser simétrico).
+	*/
 	mut arbol_no_max_heap := Nodo{100, 0, 0, 0}
 	for i := 0; i < 10; i++ {
-		arbol_no_max_heap.insertar_random(rand.int() % 100)
+		arbol_no_max_heap.insertar_random(rand.int())
 	}
 
 	imprimir_por_niveles(mut arbol_no_max_heap)
@@ -153,6 +158,11 @@ fn main() {
 	println("\n")
 
 	// Segundo Arbol
+	/*
+	Al ingresar siempre el mismo valor, tanto el recorrido en preorder
+	como postorder serán iguales, por lo que resultará en un max heap
+	simétrico.
+	*/
 	mut arbol_max_heap := Nodo{100, 0, 0, 0}
 	for i := 0; i < 10; i++ {
 		arbol_max_heap.insertar_random(100)
@@ -171,6 +181,15 @@ fn main() {
 	println("\n")
 
 	// Tercer Arbol
+	/*
+	En este caso, dado que que la raíz es 100 y los valores ingresados
+	son menores a 100, siempre va a resultar en un árbol binario de
+	búsqueda que a la vez es max-heap. Queda ver si es simétrico.
+
+	Si se cambiara el valor inicial por uno menor a 100 o se quitara la
+	condición de que los hijos de este deben ser siempre menores a él, no
+	sería un max heap.
+	*/
 	mut arbol_binary_tree_search := Nodo{100, 0, 0, 0}
 	for i := 0; i < 10; i++ {
 		arbol_binary_tree_search.insertar_binary_tree_search(rand.int() % 100)
@@ -185,4 +204,10 @@ fn main() {
 	} else {
 		println("No es un max heap.")
 	}
+
+	// Cuarto Árbol
+	/*
+	Se ingresan valores conocidos en un orden ya creado justo para cumplir
+	la condición de max-heap simétrico. Se hace la aserción de que lo sea.
+	*/
 }

@@ -3,8 +3,9 @@ precedencia = {
     "-": 1,
     "*": 2,
     "/": 2,
-    "": 0
 }
+
+no_conmutativo = set(['-', '/'])
 
 ### Funciones Auxiliares ###
 def es_operador(token):
@@ -14,8 +15,11 @@ def es_operador(token):
 def agg_parentesis(expresion):
     return f"({expresion})"
 
-# Asegura que los números negativos se lean correctamente
 def hacer_expresion(type, expresion):
+    '''
+    Asegura que los números negativos
+    se lean correctamente
+    '''
     if type == "POST":
         return expresion.split()
     elif type == "PRE":
@@ -24,6 +28,10 @@ def hacer_expresion(type, expresion):
         return "Tipo de expresión no válido. Use PRE o POST."
 
 def ver_proximo_operador(pos, expresion):
+    '''
+    Devuelve el próximo operador de
+    la expresion, si es que existe.
+    '''
     i = pos + 1
     while i < len(expresion):
         if es_operador(expresion[i]):
@@ -32,7 +40,7 @@ def ver_proximo_operador(pos, expresion):
     return ""
 
 def comparar_precedencia(actual, proximo):
-    if precedencia[actual] <= precedencia[proximo] and precedencia[actual] != 0:
+    if precedencia[actual] <= precedencia[proximo] and precedencia[proximo] != 0:
         return True
     else:
         return False
@@ -84,48 +92,43 @@ def mostrar_expresion(orden, expresion):
 
 def mostrar_prefijo(expresion):
     stack = []
-
-    for pos, i in enumerate(expresion):
+    for i in expresion:
         if es_operador(i):
-            operando1 = stack.pop()
-            operando2 = stack.pop()
-            resultado = f"{operando1}{i}{operando2}"
+            operando1, signo1 = stack.pop()
+            operando2, signo2 = stack.pop()
 
-            prox_ope = ver_proximo_operador(pos, expresion)
-            print(prox_ope)
-
-            # Agrega paréntesis si es necesario:
-            if comparar_precedencia(i, prox_ope):
-                resultado = agg_parentesis(resultado)             
-
-            stack.append(resultado)
+            if signo1 and precedencia[signo1] < precedencia[i]:
+                operando1 = agg_parentesis(operando1)
+            if signo2 and (
+                precedencia[signo2] < precedencia[i] or
+                precedencia[signo2] == precedencia[i] and
+                i in no_conmutativo
+            ):
+                operando2 = agg_parentesis(operando2)
+            stack.append((f"{operando1}{i}{operando2}", i))
         else:
-            stack.append(str(i))
+            stack.append((i, None))
+    return stack.pop()[0]
 
-    return resultado
-
-# ARREGLAR
 def mostrar_postfijo(expresion):
     stack = []
-
-    for pos, i in enumerate(expresion):
+    for i in expresion:
         if es_operador(i):
-            operando2 = stack.pop()
-            operando1 = stack.pop()
-            resultado = f"{operando1}{i}{operando2}"
+            operando2, signo2 = stack.pop()
+            operando1, signo1 = stack.pop()
 
-            prox_ope = ver_proximo_operador(pos, expresion)
-
-            # Agrega paréntesis si es necesario:
-            if comparar_precedencia(i, prox_ope):
-                resultado = agg_parentesis(resultado)             
-
-            stack.append(resultado)
+            if signo1 and precedencia[signo1] < precedencia[i]:
+                operando1 = agg_parentesis(operando1)
+            if signo2 and (
+                precedencia[signo2] < precedencia[i] or
+                precedencia[signo2] == precedencia[i] and
+                i in no_conmutativo
+            ):
+                operando2 = agg_parentesis(operando2)
+            stack.append((f"{operando1}{i}{operando2}", i))
         else:
-            stack.append(str(i))
-
-    return resultado
-
+            stack.append((i, None))
+    return stack.pop()[0]
 
 while True:
     action = input("Ingrese una acción (EVAL/MOSTRAR/SALIR): ").split()

@@ -102,6 +102,29 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         ### Funciones
         En el caso de las funciones, el tipo viene después del nombre del argumento.
+        Se pueden definir funciones propias de un interface, struct o type, esto para poder llamar `i.funcion()` en vez de `funcion(i)`. Resulta conveniente si se requiere hacer una función con el mismo nombre pero para diversos tipos de parámetros:
+
+        ```
+        struct Cat {}
+        struct Dog {}
+
+        fn (c Cat) talk() {
+            println("meow")
+        }
+
+        fn (d Dog) talk() {
+            println("woof")
+        }
+
+        fn main() {
+            cat := Cat{}
+            dog := Dog{}
+            
+            cat.talk()
+            dog.talk()
+        }
+        ```
+
         Las funciones en V pueden ser utilizadas antes de su declaración, por lo que no se necesitan archivos de header
 
     3. Diga qué tipos de datos posee y qué mecanismos ofrece para la creación de nuevos tipos (incluyendo tipos polimórficos de haberlos).
