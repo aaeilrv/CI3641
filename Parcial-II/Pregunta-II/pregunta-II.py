@@ -12,9 +12,6 @@ def es_operador(token):
     operadores = set(['+', '-', '*', '/'])
     return token in operadores
 
-def agg_parentesis(expresion):
-    return f"({expresion})"
-
 def hacer_expresion(type, expresion):
     '''
     Asegura que los números negativos
@@ -39,11 +36,17 @@ def ver_proximo_operador(pos, expresion):
         i += 1
     return ""
 
-def comparar_precedencia(actual, proximo):
-    if precedencia[actual] <= precedencia[proximo] and precedencia[proximo] != 0:
-        return True
-    else:
-        return False
+def necesita_parentesis(a_evaluar, actual, posicion):
+    if posicion == "primera_expresion":
+        return precedencia[a_evaluar] < precedencia[actual]
+    
+    elif posicion == "segunda_expresion":
+        return (precedencia[a_evaluar] < precedencia[actual] or
+                precedencia[a_evaluar] == precedencia[actual] and
+                actual in no_conmutativo)
+    
+def agg_parentesis(expresion):
+    return f"({expresion})"
 
 ### Evaluación ###
 def evaluar_expresion(orden, expresion):
@@ -60,6 +63,8 @@ def evaluar_prefijo(expresion):
     stack = []
     for i in expresion:
         if es_operador(i):
+            if (i == '/') :
+                i = '//'
             operando1 = stack.pop()
             operando2 = stack.pop()
             resultado = eval(f"{operando1} {i} {operando2}")
@@ -74,6 +79,8 @@ def evaluar_postfijo(expresion):
         if es_operador(i):
             operando2 = stack.pop()
             operando1 = stack.pop()
+            if (i == '/') :
+                i = '//'
             resultado = eval(f"{operando1} {i} {operando2}")
             stack.append(resultado)
         else:
@@ -97,14 +104,11 @@ def mostrar_prefijo(expresion):
             operando1, signo1 = stack.pop()
             operando2, signo2 = stack.pop()
 
-            if signo1 and precedencia[signo1] < precedencia[i]:
+            if signo1 and necesita_parentesis(signo1, i, 'primera_expresion'):
                 operando1 = agg_parentesis(operando1)
-            if signo2 and (
-                precedencia[signo2] < precedencia[i] or
-                precedencia[signo2] == precedencia[i] and
-                i in no_conmutativo
-            ):
+            if signo2 and necesita_parentesis(signo2, i, 'segunda_expresion'):
                 operando2 = agg_parentesis(operando2)
+
             stack.append((f"{operando1}{i}{operando2}", i))
         else:
             stack.append((i, None))
@@ -116,16 +120,14 @@ def mostrar_postfijo(expresion):
         if es_operador(i):
             operando2, signo2 = stack.pop()
             operando1, signo1 = stack.pop()
-
-            if signo1 and precedencia[signo1] < precedencia[i]:
+            
+            if signo1 and necesita_parentesis(signo1, i, 'primera_expresion'):
                 operando1 = agg_parentesis(operando1)
-            if signo2 and (
-                precedencia[signo2] < precedencia[i] or
-                precedencia[signo2] == precedencia[i] and
-                i in no_conmutativo
-            ):
+            if signo2 and necesita_parentesis(signo2, i, 'segunda_expresion'):
                 operando2 = agg_parentesis(operando2)
+
             stack.append((f"{operando1}{i}{operando2}", i))
+
         else:
             stack.append((i, None))
     return stack.pop()[0]
