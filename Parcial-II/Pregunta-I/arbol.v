@@ -1,5 +1,3 @@
-import rand
-
 struct Nodo {
 	valor f64
 mut:
@@ -20,24 +18,6 @@ fn (mut a Nodo) numero_de_hojas() int {
 	mut pre_order_nums := []f64{}
 	a.pre_order(mut pre_order_nums)
 	return pre_order_nums.len
-}
-
-fn (mut n Nodo) insertar_random(val f64) {
-	// Se utiliza un número aleatorio para
-	// decidir si se inserta a la izquierda o a la derecha
-	if rand.int() % 2 == 0 {
-		if n.existe_izq() {
-			n.izq.insertar_random(val)
-		} else {
-			n.izq = &Nodo{val, 0, 0, n.nivel + 1}
-		}
-	} else {
-		if n.existe_der() {
-			n.der.insertar_random(val)
-		} else {
-			n.der = &Nodo{val, 0, 0, n.nivel + 1}
-		}
-	}
 }
 
 fn (mut n Nodo) insertar_binary_tree_search(val f64) {
@@ -68,10 +48,10 @@ fn imprimir_por_niveles(mut n Nodo) {
 }
 
 fn imprimir_nivel_actual(n Nodo, nivel f64, espacios int) {
-	if nivel == 1 {
+	if nivel == 0 {
 		print("   ${n.valor}")
 
-	} else if nivel > 1 {
+	} else if nivel > 0 {
 		if n.existe_izq() {
 			imprimir_nivel_actual(n.izq, nivel - 1, espacios + 1)
 		}
@@ -95,10 +75,12 @@ fn (mut a Nodo) pre_order(mut nums []f64) {
 
 fn (mut a Nodo) post_order(mut nums []f64) {
 	if a.existe_izq() {
+		println("existe izq")
 		a.izq.post_order(mut nums)
 	}
 
 	if a.existe_der() {
+		println("existe der")
 		a.der.post_order(mut nums)
 	}
 
@@ -124,6 +106,13 @@ fn (mut a Nodo) es_max_heap_simetrico() bool {
 	a.pre_order(mut pre_order_nums)
 	a.post_order(mut post_order_nums)
 
+	println("\n")
+
+	println('Pre order: ${pre_order_nums}')
+	println('Post order: ${post_order_nums}')
+
+	//post_order_nums = post_order_nums.reverse()
+
 	if pre_order_nums == post_order_nums {
 		println('Es max heap simetrico.')
 		return true
@@ -134,80 +123,88 @@ fn (mut a Nodo) es_max_heap_simetrico() bool {
 }
 
 fn main() {
-	// Primer Arbol
-	/*
-	Utiliza valores aleatorios que a la vez ingresan a una hoja
-	aleatoria al árbol, por lo que puede o no ser un max heap (y
-	ser simétrico).
-	*/
-	mut arbol_no_max_heap := Nodo{100, 0, 0, 0}
-	for i := 0; i < 10; i++ {
-		arbol_no_max_heap.insertar_random(rand.int())
-	}
 
-	imprimir_por_niveles(mut arbol_no_max_heap)
+	/*
+	Primer Árbol: max heap asimétrico
+	*/
+	mut tree_1 := Nodo{100,
+		&Nodo{80, &Nodo{40, &Nodo{30, 0, 0, 3}, &Nodo{5, 0, 0, 3}, 2}, &Nodo{15, 0, 0, 2}, 1},
+		&Nodo{80, &Nodo{15, 0, 0, 2}, &Nodo{40, &Nodo{5, 0, 0, 3}, &Nodo{30, 0, 0, 3}, 2}, 1}, 0}
+
+	imprimir_por_niveles(mut tree_1)
 
 	print(": ")
 
-	if arbol_no_max_heap.es_max_heap() {
-		arbol_no_max_heap.es_max_heap_simetrico()
+	if tree_1.es_max_heap() {
+		tree_1.es_max_heap_simetrico()
 	} else {
 		println("No es un max heap.")
 	}
 
 	println("\n")
 
-	// Segundo Arbol
 	/*
-	Al ingresar siempre el mismo valor, tanto el recorrido en preorder
-	como postorder serán iguales, por lo que resultará en un max heap
-	simétrico.
+	Segundo Árbol: max heap simétrico:
+	El mismo valor en todas las hojas.
 	*/
-	mut arbol_max_heap := Nodo{100, 0, 0, 0}
-	for i := 0; i < 10; i++ {
-		arbol_max_heap.insertar_random(100)
-	}
+	mut tree_2 := Nodo{100,
+		&Nodo{100, &Nodo{100, &Nodo{100, 0, 0, 3}, &Nodo{100, 0, 0, 3}, 2}, &Nodo{100, 0, 0, 2}, 1},
+		&Nodo{100, &Nodo{100, 0, 0, 2}, &Nodo{100, &Nodo{100, 0, 0, 3}, &Nodo{100, 0, 0, 3}, 2}, 1}, 0}
 
-	imprimir_por_niveles(mut arbol_max_heap)
+	imprimir_por_niveles(mut tree_2)
 
 	print(": ")
 
-	if arbol_max_heap.es_max_heap() {
-		arbol_max_heap.es_max_heap_simetrico()
+	if tree_2.es_max_heap() {
+		tree_2.es_max_heap_simetrico()
 	} else {
 		println("No es un max heap.")
 	}
 
 	println("\n")
 
-	// Tercer Arbol
 	/*
-	En este caso, dado que que la raíz es 100 y los valores ingresados
-	son menores a 100, siempre va a resultar en un árbol binario de
-	búsqueda que a la vez es max-heap. Queda ver si es simétrico.
-
-	Si se cambiara el valor inicial por uno menor a 100 o se quitara la
-	condición de que los hijos de este deben ser siempre menores a él, no
-	sería un max heap.
+	Tercer Árbol: Es simétrico porque sólo tiene
+	un valor
 	*/
-	mut arbol_binary_tree_search := Nodo{100, 0, 0, 0}
-	for i := 0; i < 10; i++ {
-		arbol_binary_tree_search.insertar_binary_tree_search(rand.int() % 100)
-	}
 
-	imprimir_por_niveles(mut arbol_binary_tree_search)
+	mut tree_3 := Nodo{100, 0, 0, 0}
+
+	imprimir_por_niveles(mut tree_3)
 
 	print(": ")
 
-	if arbol_binary_tree_search.es_max_heap() {
-		arbol_binary_tree_search.es_max_heap_simetrico()
+	if tree_3.es_max_heap() {
+		tree_3.es_max_heap_simetrico()
 	} else {
 		println("No es un max heap.")
 	}
 
-	// Cuarto Árbol
+	println("\n")
+
 	/*
-	Se ingresan valores conocidos en un orden ya creado justo para cumplir
-	la condición de max-heap simétrico. Se hace la aserción de que lo sea.
+	Cuarto Árbol: Cada nodo sólo tiene hijos a la izquierda.
 	*/
+
+	/*mut start_value := 10
+	mut tree_4 := Nodo{start_value, 0, 0, 0}
+
+	for i := 1; i < 10; i++ {
+		tree_4.insertar_binary_tree_search(start_value - i)
+	}*/
+
+	mut tree_4 := Nodo{5, 0, &Nodo{4, 0, &Nodo{3, 0, &Nodo{2, 0, &Nodo{1, 0, 0, 4}, 3}, 2}, 1}, 0}
+
+	imprimir_por_niveles(mut tree_4)
+
+	print(": ")
+
+	if tree_4.es_max_heap() {
+		tree_4.es_max_heap_simetrico()
+	} else {
+		println("No es un max heap.")
+	}
+
+	println("\n")
+
 }
