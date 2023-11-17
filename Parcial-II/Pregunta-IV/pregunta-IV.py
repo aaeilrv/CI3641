@@ -53,7 +53,7 @@ def main():
     tiempos_recursion_de_cola = []
     tiempos_iteracion = []
 
-    valor = 100
+    valor = 30
 
     for i in range(0, 11):
         start = time.time()

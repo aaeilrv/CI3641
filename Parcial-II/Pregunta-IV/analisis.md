@@ -10,7 +10,7 @@ Los tiempos mostrados en el cuadro son el resultado de correr cada algoritmo die
 |:-----------:|:-------------------:|:------------------:|:-------------------:|
 |    **10**   |0.0003034418279474432|0.003337860107421875|0.002297488125887784|
 |    **20**   |0.001712278886274858 |0.008084557273171165|0.0063939528031782674|
-|    **30**   |0.0076077201149680395|0.0961260362104936  |0.021544369784268467|
+|    **30**   |0.0065239993008700285|0.02093748612837358 |0.012072649869051847|
 |    **40**   |0.059279528531161224 |0.03743171691894531 |0.059582970359108665|
 |    **50**   |1.085628162730824    |0.06693059747869318 |0.07854808460582387|
 |    **60**   |1.4120448719371448   | 0.10427561673251065|0.07854808460582387|
@@ -56,6 +56,14 @@ Dado que antes de $n = 100$ los valores son muy pequeños, lo hacemos en el rang
 | :--: |
 | *En esta comparación, se tiene un eje secundario del lado derecho. Esto permite una mejor visualización de la recursión de cola y la iteración.* |
 
+| ![compara-hasta-40](./graficos/hasta40.png) |
+| :--: |
+| *Comparación de las tres llamadas hasta $n = 40$. Mientras los valores de n son pequeños, el tiempo entre las tres llamadas (especialmente la recursiva ordinaria y la iterativa) se asemeja.* |
+
+| ![compara-hasta-70](./graficos/hasta70.png) |
+| :--: |
+| *Comparación de las tres llamadas hasta $n = 70$. Podemos notar el momento que la llamada recursiva ordinaria va obteniendo valores mucho más altos que el de las otras.* |
+
 ![iteracion-cola](./graficos/IteracionVsCola.png) |
 | :--: |
 | *Comparación de la llamada recursiva de cola y la llamada iterativa.* |
@@ -68,9 +76,11 @@ Dado que antes de $n = 100$ los valores son muy pequeños, lo hacemos en el rang
 ### 3. Conclusión
 ----
 
-Tal y como se puede apreciar, la llamada iterativa y la recursiva de cola producen resultados similares en la mayoría de los casos. Sin embargo, con excepción del punt $n = 30$, la llamada iterativa siempre tiene valores menores.
+Tal y como se puede apreciar, la llamada iterativa y la recursiva de cola producen resultados similares en la mayoría de los casos. En la mayoría de los puntos, la llamada iterativa siempre tiene valores menores.
 
-Como conocemos por lo aprendido en clase, el algoritmo iterativo toma mucho más tiempo que los otros dos ya que debe hacer más de una llamada antes de poder retornar. En nuestro caso, tenemos `return  subrutina_recursiva(n - 4) + subrutina_recursiva(n - 8) + subrutina_recursiva(n - 12)`, lo cual son **tres** llamadas a hacerse antes de retornar. 
+Como conocemos por lo aprendido en clase, el algoritmo iterativo toma mucho más tiempo que los otros dos ya que debe hacer más de una llamada antes de poder retornar. En nuestro caso, tenemos `return  subrutina_recursiva(n - 4) + subrutina_recursiva(n - 8) + subrutina_recursiva(n - 12)`, lo cual son **tres** llamadas a hacerse antes de retornar.
+
+Mientras el valor de $n$ se mantenga bajo, los tiempos de ejecución de la llamada recursiva ordinaria estarán a la par de las otras dos. Claro está, que esto se debe a que el tiempo de cálculo para las otras tres llamadas que la recursión ordinaria hace también es menor.
 
 Al usar recursión de cola, no se debe esperar por ninguna llamada adicional, lo que hace que los tiempos de espera sean menores.
 
