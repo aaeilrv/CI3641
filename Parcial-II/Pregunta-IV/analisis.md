@@ -48,17 +48,21 @@ Dado que antes de $n = 100$ los valores son muy pequeños, lo hacemos en el rang
 ### 2. Gráficos
 ---
 
-![compara-las-tres](./graficos/lasTres.png)
-Comparación de las tres llamadas. Se puede apreciar la gran diferencia entre la llamada recursiva ordinaria y las otras dos
+| ![compara-las-tres](./graficos/lasTres.png) |
+| :--: |
+| *Comparación de las tres llamadas. Se puede apreciar la gran diferencia entre la llamada recursiva ordinaria y las otras dos.* |
 
-![otra-comparacion](./graficos/lasTres2.png)
-En esta comparación, se tiene un eje secundario del lado derecho. Esto permite una mejor visualización de la recursión de cola y la iteración.
+| ![otra-comparacion](./graficos/lasTres2.png) |
+| :--: |
+| *En esta comparación, se tiene un eje secundario del lado derecho. Esto permite una mejor visualización de la recursión de cola y la iteración.* |
 
-![iteracion-cola](./graficos/IteracionVsCola.png)
-Comparación de la llamada recursiva de cola y la llamada iterativa.
+![iteracion-cola](./graficos/IteracionVsCola.png) |
+| :--: |
+| *Comparación de la llamada recursiva de cola y la llamada iterativa.* |
 
-![sin-tribonacci](./graficos/SinTrib.png)
-Comparación de la llamada recursiva de cola, la llamada iterativa y ellas mismas pero restándoles el tiempo de cálculo de tribonacci.
+| ![sin-tribonacci](./graficos/SinTrib.png) |
+| :--: |
+| *Comparación de la llamada recursiva de cola, la llamada iterativa y ellas mismas pero restándoles el tiempo de cálculo de tribonacci.* |
 
 
 ### 3. Conclusión
