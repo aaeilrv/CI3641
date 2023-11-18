@@ -106,11 +106,6 @@ fn (mut a Nodo) es_max_heap_simetrico() bool {
 	a.pre_order(mut pre_order_nums)
 	a.post_order(mut post_order_nums)
 
-	println("\n")
-
-	println('Pre order: ${pre_order_nums}')
-	println('Post order: ${post_order_nums}')
-
 	//post_order_nums = post_order_nums.reverse()
 
 	if pre_order_nums == post_order_nums {
@@ -183,15 +178,8 @@ fn main() {
 	println("\n")
 
 	/*
-	Cuarto Árbol: Cada nodo sólo tiene hijos a la izquierda.
+	Cuarto Árbol: Asimétrico. Cada nodo sólo tiene hijos a la izquierda.
 	*/
-
-	/*mut start_value := 10
-	mut tree_4 := Nodo{start_value, 0, 0, 0}
-
-	for i := 1; i < 10; i++ {
-		tree_4.insertar_binary_tree_search(start_value - i)
-	}*/
 
 	mut tree_4 := Nodo{5, 0, &Nodo{4, 0, &Nodo{3, 0, &Nodo{2, 0, &Nodo{1, 0, 0, 4}, 3}, 2}, 1}, 0}
 
