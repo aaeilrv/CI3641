@@ -40,63 +40,66 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         - **Iteración:**
         Para iterar, V únicamente ofrece el keyword `for`. Sin embargo, existen distintas maneras en las que puede ser usada:
-            1. `for`/`in`:
-            Se puede utilizar con un array, map o rango numérico para iterar sobre los elementos de los mismos:
-            ```
-            // Array
-            numbers := [1, 2, 3, 4, 5]
-            for number in numbers {
-                println(number)
+        
+        a. `for`/`in`:
+        Se puede utilizar con un array, map o rango numérico para iterar sobre los elementos de los mismos:
+
+        ```
+           // Array
+        numbers := [1, 2, 3, 4, 5]
+        for number in numbers {
+            println(number)
+        }
+
+        // Map
+        m := {
+            'uno': 1
+            'dos': 2
+        }
+
+        for key, value in m {
+            println('${value} -> ${key}')
+        }
+
+        /* Al sólo querer uno de los dos elementos, se puede hacer
+        for _, value in m {} o for key, _ in m{} */
+
+        // Rango numérico
+        for i in 0..5 {
+            println(i)
+        }
+        ```
+
+        b. `for` de condición: Iterará hasta que la condición se vuelva falsa.
+
+        ```
+        mut sum := 0
+        mut i := 0
+        for i <= 10 {
+            sum += i
+            i++
+        }
+        ```
+
+        c. `for` sin condición: Se omite la condición resultado en un loop infinito hasta que se haga un `break` o `continue`. Es Parecido a un `while(true)`
+
+        ```
+        mut num := 0
+        for {
+            num += 2
+            if num >= 10 {
+                break
             }
+        }
+        ```
 
-            // Map
-            m := {
-                'uno': 1
-                'dos': 2
-            }
-            for key, value in m {
-                println('${value} -> ${key}')
-            }
+        d. `C for`: Como sabemos, Vlang toma muchas cosas prestadas de C. Entre ellas, su `for` de condición:
 
-            /* Al sólo querer uno de los dos elementos, se puede hacer
-            for _, value in m {} o for key, _ in m{} */
-
-            // Rango numérico
-            for i in 0..5 {
-                println(i)
-            }
-            ```
-
-            2. `for` de condición: Iterará hasta que la condición se vuelva falsa.
-            ```
-            mut sum := 0
-            mut i := 0
-            for i <= 10 {
-                sum += i
-                i++
-            }
-            ```
-
-            3. `for` sin condición: Se omite la condición resultado en un loop infinito hasta que se
-            haga un `break` o `continue`
-            Parecido a un `while(true)`
-
-            ```
-            mut num := 0
-            for {
-                num += 2
-                if num >= 10 {
-                    break
-                }
-            }
-            ```
-
-            4. `C for`: Como sabemos, Vlang toma muchas cosas prestadas de C. Entre ellas, su `for` de condición:
-            ```
-            for i := 0; i < 10; i++ {
-                println(i)
-            } 
-            ```
+        ```
+        for i := 0; i < 10; i++ {
+            println(i)
+        } 
+        ```
 
         - **Abstracción Procedural:**
         V permite definir funciones y procedimientos, ambos de la misma manera `fn nombre() {[bloque de instrucciones]}`.
@@ -187,56 +190,57 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         Para manejar un error, hay diversos métodos de hacerlo:
 
-            1. Terminar temprano la ejecución: ya sea con `exit()` o `panic()` que detienen la ejecución de todo el programa, o a través de una declaración del control de flujo como `return`, `break` o `continue`.
+        a. Terminar temprano la ejecución: ya sea con `exit()` o `panic()` que detienen la ejecución de todo el programa, o a través de una declaración del control de flujo como `return`, `break` o `continue`.
 
-            2. Propagar el error.
+        b. Propagar el error.
 
-            3. proveer un valor default al final de un bloque `or`. En el caso de un error, ese sería el valor asignado:
+        c. proveer un valor default al final de un bloque `or`. En el caso de un error, ese sería el valor asignado:
 
-            ```
-            fn do_something(s string) !string {
-                if s == 'foo' {
-                    return 'foo'
-                }
-                return error('invalid string')
+        ```
+        fn do_something(s string) !string {
+            if s == 'foo' {
+                return 'foo'
             }
+            return error('invalid string')
+        }
 
-            a := do_something('foo') or { 'default' } // a will be 'foo'
-            b := do_something('bar') or { 'default' } // b will be 'default'
-            println(a)
-            println(b)
-            ```
+        a := do_something('foo') or { 'default' } // a will be 'foo'
+        b := do_something('bar') or { 'default' } // b will be 'default'
+        println(a)
+        println(b)
+        ```
 
-            4. `if` unwrapping.
+        4. `if` unwrapping.
 
         Además. también se pueden definir tipos de error personalizados haciendo uso de la interfaz IError.
 
         En caso de testing, usualmente se utiliza `assert`:
-        	- Para chequear si una expresión evalúa a `true`, se hace uso de `assert`. Generalmente, si el assert falla, el programa es abortado.
-            - Si no se desea que el programa aborte, se debe hacer uso de la etiqueta `[assert_continues]`.
+        - Para chequear si una expresión evalúa a `true`, se hace uso de `assert`. Generalmente, si el assert falla, el programa es abortado.
+        - Si no se desea que el programa aborte, se debe hacer uso de la etiqueta `[assert_continues]`.
 
-            ```
-            @[assert_continues]
-            fn abc(ii int) {
-                assert ii == 2
-            }
+        ```
+        @[assert_continues]
+        fn abc(ii int) {
+            assert ii == 2
+        }
 
-            for i in 0 .. 4 {
-                abc(i)
-            }
-            ```
-            Generará el siguiente output:
-            ```
-            assert_continues_example.v:3: FAIL: fn main.abc: assert ii == 2
-            left value: ii = 0
-            right value: 2
-            assert_continues_example.v:3: FAIL: fn main.abc: assert ii == 2
-            left value: ii = 1
-            right value: 2
-            assert_continues_example.v:3: FAIL: fn main.abc: assert ii == 2
-            left value: ii = 3
-            right value: 2
-            ```
+        for i in 0 .. 4 {
+            abc(i)
+        }
+        ```
+        Generará el siguiente output:
+
+        ```
+        assert_continues_example.v:3: FAIL: fn main.abc: assert ii == 2
+        left value: ii = 0
+        right value: 2
+        assert_continues_example.v:3: FAIL: fn main.abc: assert ii == 2
+        left value: ii = 1
+        right value: 2
+        assert_continues_example.v:3: FAIL: fn main.abc: assert ii == 2
+        left value: ii = 3
+        right value: 2
+        ```
 
         - **No-determinismo:**
         V no es nodeterminista por definición. Sin embargo, al hacer uso de hilos puede comportarse de manera nodeterminista si los mismos no están sincronizados.
@@ -268,17 +272,20 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         **If:**
         A pesar de ser una declaración, también se puede utilizar como una expresión.
+
         ```
         num := 32
         valor := if num % 2 == 0 { 'par' } else { 'impar' }
         ```
         En este caso, es una notación infija multipalabra, se lee de izquierda a derecha siendo lo primero la condición que se debe cumplir y lo próximo los valores en caso de que se cumpla o no:
+
         ```
         resultado := if condicion { valor_si_verdadero } else { valor_si_falso }
         ```
 
         **Match:**
         Mismo caso de If, donde se puede utilizar como una expresión y el valor guardado será aquel que haga *match* con el caso. Se lee de arriba a abajo hasta hacer el *match*.
+
         ```
         const start = 1
         const end = 10
@@ -297,6 +304,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         **Pertenencia a arrays o maps:**
         Los operadores `in` e `!in `chequean si un valor está o no en un array o map. En caso de usarse en una expresión, retorna un booleano. Su escritura debe ser `[valor_a_buscar] in/!in [sitio_donde_buscar]`
+
         ```
         a := [1, 2, 3]
         b := 1 in a
@@ -306,7 +314,8 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         ```
 
         **Concatenación de strings:**
-        Hace uso del operador `+` y el resultado será un string con los strings originales en orden de izquierda a derecha
+        Hace uso del operador `+` y el resultado será un string con los strings originales en orden de izquierda a derecha:
+
         ```
         a := 'hola'
         b := 'profesor'
@@ -317,6 +326,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         Evalúa de izquierda a derecha en el siguiente orden de precedencia:
             2.  &
             1.  |  ^
+            
         ```
         println(12 ^ 10 & 8) // 4
         println(12 & 10 ^ 8) // 0
@@ -396,6 +406,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         **Crear nuevo tipo de datos:**
         Para crear nuevos tipos de datos, se hace uso de `structs` de manera parecida a como se haría en lenguajes como C:
+
         ```
         Struct Persona {
             nombre string
@@ -411,6 +422,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         ```
 
         Además, también se pueden usar `sum types`, los cuales son instancias que pueden tener valores de distintos tipos:
+        
         ```
         struct Perro {}
         struct Gato {}
@@ -421,17 +433,20 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
     4. Describa el funcionamiento del sistema de tipos del lenguaje, incluyendo el tipo de equivalencia para sus tipos, reglas de compatibilidad y capacidades de inferencia de tipos.
 
     El tipo de las variables es inferido del valor en el lado derecho. En caso de querer utilizar otro tipo, se utiliza la función de conversión de tipos: `T(v)`, con la que la variable `v` pasa a ser del tipo `T`:
+
     ```
     a := 23 //Int
     b := i16(23) //i16
     ```
 
     En V, todos los operadores deben ser del mismo tipo en ambos lados, es decir, algo como esto no está permitido:
+
     ```
     mut a := 'hola'
     println(a + 3)
     ```
     Sin embargo, existe una excepción en el caso de los integers y unsigned, donde un tipo primitivo pequeño puede ser promovido si cabe por completo en el data range del otro tipo. Para saber todas las posibilidades, nos guiamos de esta tabla:
+
     ```
         i8 → i16 → int → i64
                     ↘     ↘
@@ -442,6 +457,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         i8 → i16 → int → i64 ⬏
     ```
     Para entender la idea mejor, se da un ejemplo de la promoción de tipos:
+
     ```
     a := 47 // int por default
     b := u16(56) // u16
