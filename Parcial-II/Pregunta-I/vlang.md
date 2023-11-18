@@ -41,65 +41,65 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         - **Iteración:**
         Para iterar, V únicamente ofrece el keyword `for`. Sin embargo, existen distintas maneras en las que puede ser usada:
         
-        a. `for`/`in`:
-        Se puede utilizar con un array, map o rango numérico para iterar sobre los elementos de los mismos:
+            a. `for`/`in`:
+            Se puede utilizar con un array, map o rango numérico para iterar sobre los elementos de los mismos:
 
-        ```
-           // Array
-        numbers := [1, 2, 3, 4, 5]
-        for number in numbers {
-            println(number)
-        }
-
-        // Map
-        m := {
-            'uno': 1
-            'dos': 2
-        }
-
-        for key, value in m {
-            println('${value} -> ${key}')
-        }
-
-        /* Al sólo querer uno de los dos elementos, se puede hacer
-        for _, value in m {} o for key, _ in m{} */
-
-        // Rango numérico
-        for i in 0..5 {
-            println(i)
-        }
-        ```
-
-        b. `for` de condición: Iterará hasta que la condición se vuelva falsa.
-
-        ```
-        mut sum := 0
-        mut i := 0
-        for i <= 10 {
-            sum += i
-            i++
-        }
-        ```
-
-        c. `for` sin condición: Se omite la condición resultado en un loop infinito hasta que se haga un `break` o `continue`. Es Parecido a un `while(true)`
-
-        ```
-        mut num := 0
-        for {
-            num += 2
-            if num >= 10 {
-                break
+            ```
+            // Array
+            numbers := [1, 2, 3, 4, 5]
+            for number in numbers {
+                println(number)
             }
-        }
-        ```
 
-        d. `C for`: Como sabemos, Vlang toma muchas cosas prestadas de C. Entre ellas, su `for` de condición:
+            // Map
+            m := {
+                'uno': 1
+                'dos': 2
+            }
 
-        ```
-        for i := 0; i < 10; i++ {
-            println(i)
-        } 
-        ```
+            for key, value in m {
+                println('${value} -> ${key}')
+            }
+
+            /* Al sólo querer uno de los dos elementos, se puede hacer
+            for _, value in m {} o for key, _ in m{} */
+
+            // Rango numérico
+            for i in 0..5 {
+                println(i)
+            }
+            ```
+
+            b. `for` de condición: Iterará hasta que la condición se vuelva falsa.
+
+            ```
+            mut sum := 0
+            mut i := 0
+            for i <= 10 {
+                sum += i
+                i++
+            }
+            ```
+
+            c. `for` sin condición: Se omite la condición resultado en un loop infinito hasta que se haga un `break` o `continue`. Es Parecido a un `while(true)`
+
+            ```
+            mut num := 0
+            for {
+                num += 2
+                if num >= 10 {
+                    break
+                }
+            }
+            ```
+
+            d. `C for`: Como sabemos, Vlang toma muchas cosas prestadas de C. Entre ellas, su `for` de condición:
+
+            ```
+            for i := 0; i < 10; i++ {
+                println(i)
+            } 
+            ```
 
         - **Abstracción Procedural:**
         V permite definir funciones y procedimientos, ambos de la misma manera `fn nombre() {[bloque de instrucciones]}`.
@@ -190,27 +190,27 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
 
         Para manejar un error, hay diversos métodos de hacerlo:
 
-        a. Terminar temprano la ejecución: ya sea con `exit()` o `panic()` que detienen la ejecución de todo el programa, o a través de una declaración del control de flujo como `return`, `break` o `continue`.
+            a. Terminar temprano la ejecución: ya sea con `exit()` o `panic()` que detienen la ejecución de todo el programa, o a través de una declaración del control de flujo como `return`, `break` o `continue`.
 
-        b. Propagar el error.
+            b. Propagar el error.
 
-        c. proveer un valor default al final de un bloque `or`. En el caso de un error, ese sería el valor asignado:
+            c. proveer un valor default al final de un bloque `or`. En el caso de un error, ese sería el valor asignado:
 
-        ```
-        fn do_something(s string) !string {
-            if s == 'foo' {
-                return 'foo'
+            ```
+            fn do_something(s string) !string {
+                if s == 'foo' {
+                    return 'foo'
+                }
+                return error('invalid string')
             }
-            return error('invalid string')
-        }
 
-        a := do_something('foo') or { 'default' } // a will be 'foo'
-        b := do_something('bar') or { 'default' } // b will be 'default'
-        println(a)
-        println(b)
-        ```
+            a := do_something('foo') or { 'default' } // a will be 'foo'
+            b := do_something('bar') or { 'default' } // b will be 'default'
+            println(a)
+            println(b)
+            ```
 
-        4. `if` unwrapping.
+            d. `if` unwrapping.
 
         Además. también se pueden definir tipos de error personalizados haciendo uso de la interfaz IError.
 
@@ -422,7 +422,7 @@ Escoja algún lenguaje de programación de alto nivel y de propósito general cu
         ```
 
         Además, también se pueden usar `sum types`, los cuales son instancias que pueden tener valores de distintos tipos:
-        
+
         ```
         struct Perro {}
         struct Gato {}
