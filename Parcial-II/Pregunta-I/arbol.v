@@ -75,12 +75,10 @@ fn (mut a Nodo) pre_order(mut nums []f64) {
 
 fn (mut a Nodo) post_order(mut nums []f64) {
 	if a.existe_izq() {
-		println("existe izq")
 		a.izq.post_order(mut nums)
 	}
 
 	if a.existe_der() {
-		println("existe der")
 		a.der.post_order(mut nums)
 	}
 
