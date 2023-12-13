@@ -25,7 +25,7 @@ what "a" $ foldr what (const []) "bc" (1:gen 2)
 ("a", 1) : ("b", 2) : ("c", 3) : (const []) (gen 4)
 < Def. const >
 ("a", 1) : ("b", 2) : ("c", 3) : []
-< evaluacion >
+< evaluación >
 [("a", 1), ("b", 2), ("c", 3)]
 ```
 
